@@ -1,4 +1,4 @@
-game.TitleScreen = me.ScreenObject.extend({
+game.GameOverScreen = me.ScreenObject.extend({
 	/**	
 	 *  action to perform on state change
 	 */

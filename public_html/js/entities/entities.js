@@ -79,6 +79,10 @@ game.LevelTrigger = me.Entity.extend({
        me.levelDirector.loadLevel(this.level);
        me.state.current().resetPlayer(this.xSpawn, this.ySpawn);
        
+   },
+   
+   gameOver: function(){
+       me.state.change(me.state.GameOver);
    }
    
 });
