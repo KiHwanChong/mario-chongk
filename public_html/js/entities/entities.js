@@ -17,7 +17,7 @@ game.PlayerEntity = me.Entity.extend({
        
         this.renderable.setCurrentAnimation("idle");
         
-        this.body.setVelocity(30, 30);              
+        this.body.setVelocity(5, 20);              
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
     },
     
@@ -52,16 +52,15 @@ game.PlayerEntity = me.Entity.extend({
             
         }
         
-        if (this.body.y > 490) {
-          me.state.change(me.state.GameOver);   
-        }
-
         
         this._super(me.Entity, "update", [delta]);
         return true;
     },
     
     collideHandler: function(response){
+        if(response.b.type === 'badguy'){
+            me.state.change(me.state.MENU);
+        }
         
     }
     
@@ -82,11 +81,6 @@ game.LevelTrigger = me.Entity.extend({
        me.state.current().resetPlayer(this.xSpawn, this.ySpawn);
        
    },
-   
-   gameOver: function(){
-       me.state.change(me.state.GameOver);
-   }
-   
 });
 
 game.BadGuy = me.Entity.extend({
@@ -140,10 +134,9 @@ game.BadGuy = me.Entity.extend({
 
         this._super(me.Entity, "update", [delta]);
         return true;
-    },
+        },
     
     collideHandler: function(){
         
     }
-    
 });
