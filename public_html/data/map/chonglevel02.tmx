@@ -32,7 +32,10 @@
   </data>
  </layer>
  <objectgroup name="EnemyEntities">
-  <object name="BadGuy" x="622" y="422" width="420" height="68"/>
-  <object name="BadGuy" x="764" y="416" width="212" height="64"/>
+  <object name="BadGuy" x="556" y="426" width="420" height="68"/>
+  <object name="BadGuy" x="906" y="426" width="212" height="64"/>
+ </objectgroup>
+ <objectgroup name="CollectableEntities">
+  <object name="Mushroom" x="72" y="422" width="66" height="66"/>
  </objectgroup>
 </map>
