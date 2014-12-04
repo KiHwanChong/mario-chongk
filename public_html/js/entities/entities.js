@@ -16,6 +16,8 @@ game.PlayerEntity = me.Entity.extend({
         this.renderable.addAnimation("bigidle", [40]);
         this.renderable.addAnimation("smallWalk", [144, 145, 146, 147, 148, 149], 80);
         this.renderable.addAnimation("bigWalk", [150, 151, 152, 153], 80);
+        this.renderable.addAnimation("shrink", [0, 1, 2, 3], 80);
+        this.renderable.addAnimation("grow", [4, 5, 6, 7], 80)
        
         this.renderable.setCurrentAnimation("idle");
         
@@ -47,7 +49,7 @@ game.PlayerEntity = me.Entity.extend({
         
         if (!this.big) {
             if (this.body.vel.x !== 0) {
-                if (!this.renderable.isCurrentAnimation("smallWalk")) {
+                if (!this.renderable.isCurrentAnimation("smallWalk") && !this.renderable.isCurrentAnimation("grow") && !this.renderable.isCurrentAnimation("shrink"))  {
                     this.renderable.setCurrentAnimation("smallWalk");
                     this.renderable.setAnimationFrame();
                 }
@@ -57,7 +59,7 @@ game.PlayerEntity = me.Entity.extend({
             }
         }else{
              if (this.body.vel.x !== 0) {
-                if (!this.renderable.isCurrentAnimation("bigWalk")) {
+                if (!this.renderable.isCurrentAnimation("bigWalk") && !this.renderable.isCurrentAnimation("grow") && !this.renderable.isCurrentAnimation("shrink")) {
                     this.renderable.setCurrentAnimation("bigWalk");
                     this.renderable.setAnimationFrame();
                 }
@@ -77,13 +79,22 @@ game.PlayerEntity = me.Entity.extend({
         console.log (ydif);
 
         if (response.b.type === 'badguy') {
-            if (ydif <= -36) {
+            if (ydif <= -47) {
                 response.b.alive = false;
-            } else {
-                me.state.change(me.state.MENU);
+            } else if(response.b.alive) {
+                if(this.big){
+                    this.big = false;
+                    this.body.vel.y -= this.body.accel.y * me.timer.tick;
+                    this.jumping = true;
+                    this.renderable.setCurrentAnimation("shrink", "idle");
+                    this.renderable.setAnimationFrame();
+                } else {
+                    me.state.change(me.state.MENU);
+                }
             }
 
-        }else if(response.b.type === 'mushroom') {
+        } else if (response.b.type === 'mushroom') {
+            this.renderable.setCurrentAnimation("grow", "bigIdle");
             this.big = true;
             me.game.world.removeChild(response.b);
         }
