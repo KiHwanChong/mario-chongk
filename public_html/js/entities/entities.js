@@ -1,4 +1,4 @@
-// TODO
+//drawing mario
 game.PlayerEntity = me.Entity.extend({
     init: function(x, y, settings){
         this._super(me.Entity, 'init', [x, y, {
@@ -14,6 +14,9 @@ game.PlayerEntity = me.Entity.extend({
         
         this.renderable.addAnimation("idle", [39]);
         this.renderable.addAnimation("bigidle", [40]);
+        //createes an animation for the caractter walking without powerups called smallwalk
+        //adds an array of values which are the pictures for the animation
+        ///80 represents the amout of milliseconds for changing images
         this.renderable.addAnimation("smallWalk", [144, 145, 146, 147, 148, 149], 80);
         this.renderable.addAnimation("bigWalk", [150, 151, 152, 153], 80);
         this.renderable.addAnimation("shrink", [0, 1, 2, 3], 80);
@@ -21,14 +24,23 @@ game.PlayerEntity = me.Entity.extend({
        
         this.renderable.setCurrentAnimation("idle");
         
+        //sets a variable for whetther we have eaten the mushroom
         this.big = false;
-        this.body.setVelocity(5, 20);              
+        
+        //the first number sets the speed mario moves on x axis, the second sets the speen on the y axis
+        this.body.setVelocity(5, 20);
+        
+        //makes the screen(viewport) follow mario's position (pos) on both x and y axis
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
     },
     
     update: function(delta){
+        //checks if the right key is pushed down
         if(me.input.isKeyPressed("right")){
+            //resets the image if it has been flipped so it is back to normal
             this.flipX(false);
+            //adds value to mario's x position based on the x vaule from setVelocity above
+            //me.timer.tick smooths the animation for irregular updates
             this.body.vel.x += this.body.accel.x * me.timer.tick;}                     
         else if(me.input.isKeyPressed("left")){
             this.flipX(true);
@@ -89,7 +101,7 @@ game.PlayerEntity = me.Entity.extend({
                     this.renderable.setCurrentAnimation("shrink", "idle");
                     this.renderable.setAnimationFrame();
                 } else {
-                    me.state.change(me.state.MENU);
+                    me.state.change(me.state.GAMEOVER);
                 }
             }
 
@@ -98,6 +110,10 @@ game.PlayerEntity = me.Entity.extend({
             this.big = true;
             me.game.world.removeChild(response.b);
         }
+        
+        if (this.pos.y <= -50) {
+            me.state.change(me.state.GAMEOVER);
+        }
     }
     
 });
@@ -105,6 +121,7 @@ game.PlayerEntity = me.Entity.extend({
 game.LevelTrigger = me.Entity.extend({
    init: function(x,y, settings){
        this._super(me.Entity, 'init', [x, y, settings]);
+       //sets what happens when this body collides with something to a function called onCollision and passes this level trigger as a hidden parameter
        this.body.onCollision = this.onCollision.bind(this);
        this.level = settings.level;
        this.xSpawn = settings.xSpawn;

@@ -5,7 +5,7 @@ game.GameOverScreen = me.ScreenObject.extend({
 	onResetEvent: function() {	
 //            var titleImage = new me.Sprite(0, 0, me.loader.getImage("title-screen"), -10);
 //            me.game.world.addChild(titleImage, 1);
-            me.game.world.addChild( new me.Sprite (0, 0, me.loader.getImage('title-screen')), -10); 
+            me.game.world.addChild( new me.Sprite (0, 0, me.loader.getImage('gameover-screen')), -10); 
             me.input.bindKey(me.input.KEY.ENTER, "start");
             
             me.game.world.addChild(new (me.Renderable.extend({
@@ -16,8 +16,8 @@ game.GameOverScreen = me.ScreenObject.extend({
                 },
                 
                 draw: function(renderer){
-                    this.font.draw(renderer.getContext(), "Marioish", 450, 130);
-                    this.font.draw(renderer.getContext(), "Press ENTER to play!", 250, 530);
+                    this.font.draw(renderer.getContext(), "Game Over", 450, 130);
+                    this.font.draw(renderer.getContext(), "Press ENTER to replay!", 250, 530);
                 }
                 
             })));
