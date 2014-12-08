@@ -1,3 +1,4 @@
+//basically same type of screen as title screen. I only change the background image and text
 game.GameOverScreen = me.ScreenObject.extend({
 	/**	
 	 *  action to perform on state change

@@ -14,7 +14,7 @@ game.TitleScreen = me.ScreenObject.extend({
                     this.font = new me.Font("Arial", 46, "white");
                     
                 },
-                
+                //drawing text and adjusting its position with width and height
                 draw: function(renderer){
                     this.font.draw(renderer.getContext(), "Marioish", 450, 130);
                     this.font.draw(renderer.getContext(), "Press ENTER to play!", 250, 530);

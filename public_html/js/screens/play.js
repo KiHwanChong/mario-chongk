@@ -10,6 +10,7 @@ game.PlayScreen = me.ScreenObject.extend({
                 
                 this.resetPlayer(0, 400);
                 
+                //setting up input keys for right, left, and jump
                 me.input.bindKey(me.input.KEY.RIGHT, "right");
                 me.input.bindKey(me.input.KEY.LEFT, "left");
                 me.input.bindKey(me.input.KEY.UP, "jump");
@@ -32,6 +33,7 @@ game.PlayScreen = me.ScreenObject.extend({
         
         resetPlayer: function(x, y){
             var player = me.pool.pull("mario", x, y, {});
+            //the number means the priorty of mario image. The higher it is, mario will appear at the front of all other objects
             me.game.world.addChild(player, 10);
         }
         
