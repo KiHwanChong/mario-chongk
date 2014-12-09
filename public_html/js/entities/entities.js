@@ -35,16 +35,18 @@ game.PlayerEntity = me.Entity.extend({
         //sets a variable for whether we have eaten the star
         this.super = false;
         this.fire = false;
-
+        //set up a timer for star. The number means milliseconds.
+        this.starTimer = 1000;
+        this.currentStar = new Date().getTime();
         //the first number sets the speed mario moves on x axis, the second sets the speen on the y axis
         this.body.setVelocity(5, 20);
-
         
-
         //makes the screen(viewport) follow mario's position (pos) on both x and y axis
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
     },
-    update: function(delta) {
+    update: function(delta) {       
+        console.log(this.now);
+        this.now = new Date().getTime();
         if (this.pos.y >= 600) {
             me.state.change(me.state.GAMEOVER);
         }
@@ -74,7 +76,7 @@ game.PlayerEntity = me.Entity.extend({
         this.body.update(delta);
         me.collision.check(this, true, this.collideHandler.bind(this), true);
 
-        //set animation for each status. First one is for small mario, second one is for big mario, and last one is for super mario.
+        //set animation for each status. If this.body is not big, super, or fire, the small animation will show.
         if (!this.big && !this.super && !this.fire) {
             if (this.body.vel.x !== 0) {
                 if (!this.renderable.isCurrentAnimation("smallWalk") && !this.renderable.isCurrentAnimation("grow") && !this.renderable.isCurrentAnimation("shrink")) {
@@ -85,7 +87,9 @@ game.PlayerEntity = me.Entity.extend({
                 this.renderable.setCurrentAnimation("idle");
 
             }
-        } else if (this.big) {
+        }
+        //big mario who ate mushroom
+        else if (this.big) {
             if (this.body.vel.x !== 0) {
                 if (!this.renderable.isCurrentAnimation("bigWalk") && !this.renderable.isCurrentAnimation("grow") && !this.renderable.isCurrentAnimation("shrink")) {
                     this.renderable.setCurrentAnimation("bigWalk");
@@ -95,7 +99,9 @@ game.PlayerEntity = me.Entity.extend({
                 this.renderable.setCurrentAnimation("bigidle");
 
             }
-        } else if (this.super) {
+        } 
+        //mario who ate star
+        else if (this.super) {
             if (this.body.vel.x !== 0) {
                 if (!this.renderable.isCurrentAnimation("superWalk") && !this.renderable.isCurrentAnimation("grow") && !this.renderable.isCurrentAnimation("shrink")) {
                     this.renderable.setCurrentAnimation("superWalk");
@@ -107,6 +113,7 @@ game.PlayerEntity = me.Entity.extend({
             }
 
         }
+        //fire mario animations
         else if (this.fire) {
             if (this.body.vel.x !== 0) {
                 if (!this.renderable.isCurrentAnimation("fireWalk") && !this.renderable.isCurrentAnimation("grow") && !this.renderable.isCurrentAnimation("shrink")) {
@@ -122,6 +129,10 @@ game.PlayerEntity = me.Entity.extend({
 
         this._super(me.Entity, "update", [delta]);
         return true;
+        //set a timer for star
+        if(this.super && ((this.now - this.currentStar) >= this.starTimer)){
+            this.super = false;
+        }
     },
     collideHandler: function(response) {
         var ydif = this.pos.y - response.b.pos.y;
@@ -158,6 +169,7 @@ game.PlayerEntity = me.Entity.extend({
         else if (response.b.type === 'star') {
             this.renderable.setCurrentAnimation("superidle");
             this.super = true;
+            this.currentStar = this.now;
 
             me.game.world.removeChild(response.b);
         }
